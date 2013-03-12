@@ -1,3 +1,8 @@
+# Backbone.AutocompleteView
+
+This is a different type of Autocompletor. Instead of having some library render your list,
+we give _you_ control of how you list looks and behaves.
+
 ## Example
 
 This example makes use of [Backbone.ProxyView](https://github.com/envato/backbone.proxy-view) and [Handlebars](https://github.com/wycats/handlebars.js/)
@@ -8,18 +13,25 @@ This example makes use of [Backbone.ProxyView](https://github.com/envato/backbon
 </div>
 
 <script>
-  new AutoCompleteProxyView.new({ el: "#autocompletor" });
+  new AutoCompleteProxyView.new({
+    el: "#autocompletor",
+    data: [ { id: 1, name: "Envato" }, { name: id: 2 "Microlancer" } ]
+  });
 </script>
 ```
 
 ```coffeescript
+#= require handlebars
+#= require backbone.proxy-view
+#= require backbone.autocomplete-view
+
 class AutoCompleteProxyView extends Backbone.ProxyView
 
   template: Handlebars.compile """
     {{#if query}}
-      <ul id="search-form-results">
+      <ul>
         {{#each results}}
-          <li data-value="{{slug}}" class="query-item">{{{highlighted}}}</li>
+          <li data-value="{{id}}">{{{name}}}</li>
         {{/each}}
       </ul>
     {{/if}}
@@ -30,28 +42,26 @@ class AutoCompleteProxyView extends Backbone.ProxyView
 
   ready: ->
     @autocomplete = new Backbone.AutocompleteView
-      $input: @$requirement('input')
-      template: _.memoize(_.bind(@render, this), @_cacheKey)
+      $input: @$requirement('input') # The input to watch for events on
+      template: (query) => # The template to render
+        @render(query)
       classes:
-        active: 'active'
+        active: 'active' # When they press/up down, what class to add to the item
       selectors:
-        item: 'li'
+        item: 'li' # A css selector that signifies what is an item in the list
 
+    # The AutocompleteView class emits a 'select' event
+    # when something is selected
     @autocomplete.on 'select', ($el) =>
-      console.log "Selected #{$el}"
+      console.log "selected #{$el}"
 
   render: (query) ->
     query = query || ""
     search = new RegExp query.replace(/[^a-zA-Z1-9\s]/, ''), "i"
 
-    partial = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-    highlighter = new RegExp('(' + partial + ')', 'i')
-
     results = []
-    for category in @options.categories
-      if search.test category.name
-        results.push
-          highlighted: category.name.replace(highlighter, ($1, match) -> "<strong>#{match}</strong>")
+    for item in @data
+      results.push item if search.test item.name
 
     @template query: query, results: results
 
