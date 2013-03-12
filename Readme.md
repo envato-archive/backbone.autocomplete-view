@@ -9,7 +9,7 @@ class SearchFormProxyView extends Backbone.ProxyView
     {{#if query}}
       <ul id="search-form-results">
         {{#each results}}
-          <li data-value="{{slug}}" class="query-item"><a href="/search?search[query]={{slug}}" title="{{name}}">{{{highlighted}}}</a></li>
+          <li data-value="{{slug}}" class="query-item">{{{highlighted}}}</li>
         {{/each}}
       </ul>
     {{/if}}
@@ -41,8 +41,6 @@ class SearchFormProxyView extends Backbone.ProxyView
     for category in @options.categories
       if search.test category.name
         results.push
-          slug: category.slug
-          name: category.name
           highlighted: category.name.replace(highlighter, ($1, match) -> "<strong>#{match}</strong>")
 
     @template query: query, results: results
