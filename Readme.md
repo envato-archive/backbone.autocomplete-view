@@ -3,7 +3,7 @@
 This example makes use of [Backbone.ProxyView](https://github.com/envato/backbone.proxy-view) and [Handlebars](https://github.com/wycats/handlebars.js/)
 
 ```coffeescript
-class SearchFormProxyView extends Backbone.ProxyView
+class AutoCompleteProxyView extends Backbone.ProxyView
 
   template: Handlebars.compile """
     {{#if query}}
@@ -47,6 +47,16 @@ class SearchFormProxyView extends Backbone.ProxyView
 
   remove: ->
     @autocomplete.remove()
+```
+
+```HTML
+<div id="autocompletor">
+  <input type="text" />
+</div>
+
+<script>
+  new AutoCompleteProxyView.new({ el: "#autocompletor" });
+</script>
 ```
 
 ## Contributing
