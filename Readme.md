@@ -3,6 +3,9 @@
 This is a different type of Autocompletor. Instead of having some library render your list,
 we give _you_ control of how you list looks and behaves.
 
+_Note:_ This class is currently built to work with data bootstrapted into it. It doesn't have a callback
+mechanism that would allow you to grab the data via AJAX.
+
 ## Example
 
 This example makes use of [Backbone.ProxyView](https://github.com/envato/backbone.proxy-view) and [Handlebars](https://github.com/wycats/handlebars.js/)
